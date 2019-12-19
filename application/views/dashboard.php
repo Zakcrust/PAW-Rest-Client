@@ -33,7 +33,7 @@ $this->load->library('session');
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('User/dashboard')  ?>">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
@@ -45,7 +45,7 @@ $this->load->library('session');
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="<?php echo base_url('User/dashboard') ?>">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -68,7 +68,7 @@ $this->load->library('session');
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">List of action:</h6>
             <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a>
-            <a class="collapse-item" href="<?php echo base_url('AdminMain/jadwal') ?>">Leaderboard</a>
+            <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a>
           </div>
         </div>
       </li>
@@ -128,7 +128,7 @@ $this->load->library('session');
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">User</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Dilo Assignment</span>
                 <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
               </a>
               <!-- Dropdown - User Information -->

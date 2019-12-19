@@ -13,11 +13,12 @@ $this->load->library('session');
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ZakMas Admin - Schedule</title>
+    <title>User - Leaderboards</title>
 
     <!-- Custom fonts for this template-->
     <link href="<?php echo base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
     <!-- Custom styles for this template-->
     <link href="<?php echo base_url('assets/') ?>css/sb-admin-2.min.css" rel="stylesheet">
 
@@ -32,20 +33,19 @@ $this->load->library('session');
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('User/dashboard') ?>">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">ZakMas <sup>studio</sup></div>
+                <div class="sidebar-brand-text mx-3">Dilo Assignment <sup>Week 9</sup></div>
             </a>
 
             <!-- Divider -->
-
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="<?php echo base_url('AdminMain') ?>">
+                <a class="nav-link" href="<?php echo base_url('User/dashboard') ?>">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -62,14 +62,13 @@ $this->load->library('session');
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span>
+                    <span>Actions</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">List of tables:</h6>
-                        <a class="collapse-item" href="<?php echo base_url('AdminMain/user') ?>">Table User</a>
-                        <a class="collapse-item" href="<?php echo base_url('AdminMain/jadwal') ?>">Table Jadwal</a>
-                        <a class="collapse-item" href="<?php echo base_url('AdminMain/pemesanan') ?>">Table Pemesanan</a>
+                        <h6 class="collapse-header">List of action:</h6>
+                        <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a>
                     </div>
                 </div>
             </li>
@@ -129,7 +128,7 @@ $this->load->library('session');
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">ZakMas</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">User</span>
                                 <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -148,24 +147,29 @@ $this->load->library('session');
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <form action="<?php echo base_url('JadwalData/update') ?>" method="post">
+                    <form action="<?php echo base_url('User/submitleaderboard') ?>" method="post">
                         <div class="form-group">
-                            <input type="hidden" name="id_jadwal" value="<?php echo $jadwal->id_jadwal ?>" required>
-                            <label for="exampleInputEmail1">Hari</label>
-                            <select name="hari" class="form-control" id="exampleFormControlSelect1" value="<?php echo $jadwal->Hari ?>">
-                                <option value="Senin">Senin</option>
-                                <option value="Selasa">Selasa</option>
-                                <option value="Rabu">Rabu</option>
-                                <option value="Kamis">Kamis</option>
-                                <option value="Jumat">Jum'at</option>
+                            <label for="exampleInputEmail1">Select Game</label>
+                            <select name="game_id" class="form-control" id="exampleFormControlSelect1" required>
+                                <?php
+                                $game_data_query = $this->db->get('game');
+                                $game_data['game'] = $game_data_query->result();
+                                foreach ($game_data['game'] as $g) {
+                                    ?>
+                                    <option value="<?php echo $g->id ?>"><?php echo $g->game_name ?></option>
+                                    bruh
+                                <?php } ?>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Jam</label>
-                            <input name="jam" type="time" class="form-control" id="exampleInputPassword1" placeholder="00:00" value="<?php echo $jadwal->Jam ?>" required>
+                            <label for="exampleInputEmail1">Select Level</label>
+                            <input name="level" type="number" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Level" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
+                    <div class="d-flex justify-content-center">
+                        <div style="color :green"><?php echo $this->session->flashdata('data_success') ?></div>
+                    </div>
                 </div>
                 <!-- /.container-fluid -->
 
@@ -175,7 +179,7 @@ $this->load->library('session');
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; ZakMas 2019</span>
+                            <span>Copyright &copy; Dilo Assignment 2019</span>
                         </div>
                     </div>
                 </footer>
@@ -205,7 +209,7 @@ $this->load->library('session');
                     <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="<?php echo base_url('AdminData/logout') ?>">Logout</a>
+                        <a class="btn btn-primary" href="<?php echo base_url('User/logout') ?>">Logout</a>
                     </div>
                 </div>
             </div>

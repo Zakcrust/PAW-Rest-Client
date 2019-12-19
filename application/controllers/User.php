@@ -89,15 +89,15 @@ class User extends CI_Controller {
 		$this->load->library('session');
 		$user_data_query = $this->DataModel->get_data(array('username' => $_SESSION['user']), 'user');
 		$user_data['user'] = $user_data_query->row();
-
 		$this->load->view('submitscore', $user_data);
 	}
 
 	public function submitscore()
 	{
+		$this->load->library('session');
 		/* $user_data_query = $this->DataModel->get_data(array('username' => $_SESSION['user']),'user');
 		$user_data = $user_data_query->row(); */
-
+		$this->session->set_flashdata('data_success','data has been submitted');
 		$data = array(
 				'level' 	=> $this->input->post('level'),
 				'game_id' 	=> $this->input->post('game_id'),
@@ -108,5 +108,22 @@ class User extends CI_Controller {
 		$this->DataModel->input_data($data, 'game_level');
 
 		redirect('User/score');
+	}
+
+	public function submitleaderboard()
+	{
+		$game_id 	= $this->input->post('game_id');
+		$level		= $this->input->post('level');
+		$this->db->order_by('score', 'DESC');
+		$data['query'] = $this->DataModel->get_data(array('game_id' => $game_id, 'level' => $level),'game_level');
+		$data['leaderboard'] = $data['query']->result();
+
+		$this->load->view('leaderboardview', $data);
+	}
+
+	public function leaderboard()
+	{
+		$this->load->library('session');
+		$this->load->view('leaderboard');
 	}
 }

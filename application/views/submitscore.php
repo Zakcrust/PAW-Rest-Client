@@ -33,11 +33,11 @@ $this->load->model('DataModel');
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('User/dashboard')  ?>">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">ZakMas <sup>studio</sup></div>
+                <div class="sidebar-brand-text mx-3">Dilo Assignment <sup>Week 9</sup></div>
             </a>
 
             <!-- Divider -->
@@ -46,7 +46,7 @@ $this->load->model('DataModel');
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="<?php echo base_url('AdminMain') ?>">
+                <a class="nav-link" href="<?php echo base_url('User/dashboard') ?>">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -68,8 +68,8 @@ $this->load->model('DataModel');
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">List of action:</h6>
-                        <a class="collapse-item" href="<?php echo base_url('AdminMain/user') ?>">Submit score</a>
-                        <a class="collapse-item" href="<?php echo base_url('AdminMain/jadwal') ?>">Leaderboard</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a>
                     </div>
                 </div>
             </li>
@@ -129,7 +129,7 @@ $this->load->model('DataModel');
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">ZakMas</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Dilo Assignment</span>
                                 <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -153,14 +153,13 @@ $this->load->model('DataModel');
                         <div class="form-group">
                             <label for="exampleInputEmail1">Game</label>
                             <select name="game_id" class="form-control" id="exampleFormControlSelect1" required>
-                                <?php 
+                                <?php
                                 $game_data_query = $this->db->get('game');
                                 $game_data['game'] = $game_data_query->result();
-                                foreach($game_data['game'] as $g)
-                                {
-                                ?>
-                                <option value="<?php echo $g->id ?>"><?php echo $g->game_name ?></option>
-                                bruh
+                                foreach ($game_data['game'] as $g) {
+                                    ?>
+                                    <option value="<?php echo $g->id ?>"><?php echo $g->game_name ?></option>
+                                    bruh
                                 <?php } ?>
                             </select>
                         </div>
@@ -174,6 +173,9 @@ $this->load->model('DataModel');
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
+                    <div class="d-flex justify-content-center">
+                        <div style="color :green"><?php echo $this->session->flashdata('data_success') ?></div>
+                    </div>
                 </div>
                 <!-- /.container-fluid -->
 
@@ -183,7 +185,7 @@ $this->load->model('DataModel');
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; ZakMas 2019</span>
+                            <span>Copyright &copy; Dilo Assignment 2019</span>
                         </div>
                     </div>
                 </footer>
@@ -213,7 +215,7 @@ $this->load->model('DataModel');
                     <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="<?php echo base_url('AdminMain/logout') ?>">Logout</a>
+                        <a class="btn btn-primary" href="<?php echo base_url('User/logout') ?>">Logout</a>
                     </div>
                 </div>
             </div>
