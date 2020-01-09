@@ -9,35 +9,21 @@ class DataModel extends CI_Model
         parent::__construct();
     }
 
-    function tampil_data($table)
+    public function _uploadImage($file_name)
     {
-        return $this->db->get($table);
-    }
+        $config['allowed_types']        = 'gif|jpg|png';
+        $config['file_name']            = $file_name;
+        $config['overwrite']            = true;
+        $config['max_size']             = 2048; // 1MB
+        // $config['max_width']            = 1024;
+        // $config['max_height']           = 768;
 
-    function input_data($data, $table)
-    {
-        $this->db->insert($table, $data);
-    }
+        $this->load->library('upload', $config);
 
-    function hapus_data($where, $table)
-    {
-        $this->db->where($where);
-        $this->db->delete($table);
-    }
+        if ($this->upload->do_upload('fileToUpload')) {
+            return $this->upload->data("file_name");
+        }
 
-    function get_data($where, $table)
-    {   
-        return $this->db->get_where($table, $where);
-    }
-
-    function get_all_data($table)
-    {
-        return $this->db->get($table);
-    }
-
-    function update_data($where, $data, $table)
-    {
-        $this->db->where($where);
-        $this->db->update($table, $data);
+        return $_ENV['default_img'];
     }
 }

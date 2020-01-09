@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('session');
+
+$client = new \GuzzleHttp\Client();
+$response = $client->request('GET', $_ENV['url'] . '/PAW-Rest/api/validation?api_key=' . $_SESSION['api_key'] . '&username=' . $_SESSION['user']);
+$data = json_decode($response->getBody(), TRUE);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +17,7 @@ $this->load->library('session');
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>User - Leaderboards</title>
+    <title>User - Data</title>
 
     <!-- Custom fonts for this template-->
     <link href="<?php echo base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -33,11 +37,11 @@ $this->load->library('session');
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('User/dashboard') ?>">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('User/dashboard')  ?>">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Dilo Assignment <sup>Week 9</sup></div>
+                <div class="sidebar-brand-text mx-3">Balahu <sup>Rest Client</sup></div>
             </a>
 
             <!-- Divider -->
@@ -67,8 +71,11 @@ $this->load->library('session');
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">List of action:</h6>
-                        <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a>
-                        <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/profile') ?>">Profile</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/data') ?>">User Data</a>
+                        <!-- <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a> -->
+                        <!-- <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a> -->
+
                     </div>
                 </div>
             </li>
@@ -128,8 +135,8 @@ $this->load->library('session');
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">User</span>
-                                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $data['name'] ?></span>
+                                <img class="img-profile rounded-circle" src="data:image/png;base64,<?php echo $data['photo'] ?>">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -147,29 +154,13 @@ $this->load->library('session');
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <form action="<?php echo base_url('User/submitleaderboard') ?>" method="post">
+                    <form action="<?php echo base_url('User/datasubmit') ?>" method="post">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Select Game</label>
-                            <select name="game_id" class="form-control" id="exampleFormControlSelect1" required>
-                                <?php
-                                $game_data_query = $this->db->get('game');
-                                $game_data['game'] = $game_data_query->result();
-                                foreach ($game_data['game'] as $g) {
-                                    ?>
-                                    <option value="<?php echo $g->id ?>"><?php echo $g->game_name ?></option>
-                                    bruh
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Select Level</label>
-                            <input name="level" type="number" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Level" required>
+                            <label>Random Text</label>
+                            <input name="random_text" type="text" class="form-control" placeholder="Text" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
-                    <div class="d-flex justify-content-center">
-                        <div style="color :green"><?php echo $this->session->flashdata('data_success') ?></div>
-                    </div>
                 </div>
                 <!-- /.container-fluid -->
 
@@ -179,7 +170,7 @@ $this->load->library('session');
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; Dilo Assignment 2019</span>
+                            <span>Copyright &copy; Balahu 2019</span>
                         </div>
                     </div>
                 </footer>

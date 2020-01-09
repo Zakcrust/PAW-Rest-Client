@@ -44,7 +44,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                     <form class="user" action="<?php echo base_url('User/register') ?>" method="post">
                                         <div class="form-group">
-                                            <input name="name" type="text" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Username" required>
+                                            <input name="name" type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input name="username" type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Username" required>
                                         </div>
                                         <div class="form-group">
                                             <input name="password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" required>
@@ -56,7 +59,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div class="d-flex justify-content-center">
                             Already have an account?<a href="<?php echo base_url('UserLogin') ?>">Sign In</a><br>
-                            <div style="color :red"><?php echo $this->session->flashdata('data_invalid') ?></div>
+                            <div class="row">
+                                <div style="color :red"><?php echo $this->session->flashdata('data_invalid') ?></div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

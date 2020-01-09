@@ -1,7 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('session');
-$this->load->model('DataModel');
+
+$client = new \GuzzleHttp\Client();
+$response = $client->request('GET', $_ENV['url'] . '/PAW-Rest/api/validation?api_key=' . $_SESSION['api_key'] . '&username=' . $_SESSION['user']);
+$data = json_decode($response->getBody(), TRUE);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +17,7 @@ $this->load->model('DataModel');
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>User - Leaderboards</title>
+    <title>User - Data</title>
 
     <!-- Custom fonts for this template-->
     <link href="<?php echo base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -38,7 +41,7 @@ $this->load->model('DataModel');
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Dilo Assignment <sup>Week 9</sup></div>
+                <div class="sidebar-brand-text mx-3">Balahu <sup>Rest Client</sup></div>
             </a>
 
             <!-- Divider -->
@@ -68,8 +71,11 @@ $this->load->model('DataModel');
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">List of action:</h6>
-                        <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a>
-                        <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/profile') ?>">Profile</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/data') ?>">User Data</a>
+                        <!-- <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a> -->
+                        <!-- <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a> -->
+
                     </div>
                 </div>
             </li>
@@ -129,8 +135,8 @@ $this->load->model('DataModel');
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">User</span>
-                                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $data['name'] ?></span>
+                                <img class="img-profile rounded-circle" src="data:image/png;base64,<?php echo $data['photo'] ?>">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -148,101 +154,97 @@ $this->load->model('DataModel');
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <div class="d-flex justify-content-center">
-                        <h2>Leaderboards</h2>
-                    </div>
+
                     <table class="table table-bordered ">
                         <thead>
                             <tr>
                                 <th scope="col">No</th>
-                                <th scope="col">username</th>
-                                <th scope="col">Game</th>
-                                <th scope="col">Level</th>
-                                <th scope="col">Score</th>
+                                <th scope="col">Random Text</th>
+                                <th scope="col">Aksi</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             <?php
                             $no = 1;
-                            foreach ($leaderboard as $u) {
+                            foreach ($datauser as $u) {
                                 ?>
                                 <tr>
                                     <td><?php echo $no++ ?></td>
-                                    <td><?php
-                                            $user_data = $this->DataModel->get_data(array('id' => $u->user_id), 'user')->row();
-                                            echo $user_data->username;
-                                            ?></td>
-                                    <td><?php
-                                            $user_data = $this->DataModel->get_data(array('id' => $u->game_id), 'game')->row();
-                                            echo $user_data->game_name;
-                                            ?></td>
-                                    <td><?php echo $u->level ?></td>
-                                    <td><?php echo $u->score ?></td>
+                                    <td><?php echo $u->random_text ?></td>
+                                    <td colspan="2">
+                                        <a type="button" class="btn btn-primary text-white" href="<?= base_url('user/dataedit/') . $u->id ?>">Edit</a>
+                                        <a type="button" class="btn btn-danger text-white" href="<?= base_url('user/datadelete/') . $u->id ?>">Hapus</a>
+                                    </td>
                                 </tr>
                             <?php } ?>
                         </tbody>
                     </table>
-                    <!-- /.container-fluid -->
+                    <br>
+                    <a type="button" class="btn btn-primary text-white" href="<?= base_url('user/dataadd/') ?>">Tambah</a>
 
-                    <!-- End of Main Content -->
-
-                    <!-- Footer -->
-                    <footer class="sticky-footer bg-white">
-                        <div class="container my-auto">
-                            <div class="copyright text-center my-auto">
-                                <span>Copyright &copy; Dilo Assignment 2019</span>
-                            </div>
-                        </div>
-                    </footer>
-                    <!-- End of Footer -->
 
                 </div>
-                <!-- End of Content Wrapper -->
+                <!-- /.container-fluid -->
+
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; Balahu 2019</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
 
             </div>
-            <!-- End of Page Wrapper -->
+            <!-- End of Content Wrapper -->
 
-            <!-- Scroll to Top Button-->
-            <a class="scroll-to-top rounded" href="#page-top">
-                <i class="fas fa-angle-up"></i>
-            </a>
+        </div>
+        <!-- End of Page Wrapper -->
 
-            <!-- Logout Modal-->
-            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                            <a class="btn btn-primary" href="<?php echo base_url('User/logout') ?>">Logout</a>
-                        </div>
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="<?php echo base_url('User/logout') ?>">Logout</a>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Bootstrap core JavaScript-->
-            <script src="<?php echo base_url('assets/') ?>vendor/jquery/jquery.min.js"></script>
-            <script src="<?php echo base_url('assets/') ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap core JavaScript-->
+        <script src="<?php echo base_url('assets/') ?>vendor/jquery/jquery.min.js"></script>
+        <script src="<?php echo base_url('assets/') ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-            <!-- Core plugin JavaScript-->
-            <script src="<?php echo base_url('assets/') ?>vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="<?php echo base_url('assets/') ?>vendor/jquery-easing/jquery.easing.min.js"></script>
 
-            <!-- Custom scripts for all pages-->
-            <script src="<?php echo base_url('assets/') ?>js/sb-admin-2.min.js"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="<?php echo base_url('assets/') ?>js/sb-admin-2.min.js"></script>
 
-            <!-- Page level plugins -->
-            <script src="<?php echo base_url('assets/') ?>vendor/chart.js/Chart.min.js"></script>
+        <!-- Page level plugins -->
+        <script src="<?php echo base_url('assets/') ?>vendor/chart.js/Chart.min.js"></script>
 
-            <!-- Page level custom scripts -->
-            <script src="<?php echo base_url('assets/') ?>js/demo/chart-area-demo.js"></script>
-            <script src="<?php echo base_url('assets/') ?>js/demo/chart-pie-demo.js"></script>
+        <!-- Page level custom scripts -->
+        <script src="<?php echo base_url('assets/') ?>js/demo/chart-area-demo.js"></script>
+        <script src="<?php echo base_url('assets/') ?>js/demo/chart-pie-demo.js"></script>
 
 </body>
 

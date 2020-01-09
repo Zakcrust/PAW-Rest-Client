@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('session');
+
+$client = new \GuzzleHttp\Client();
+$response = $client->request('GET', $_ENV['url'] . '/PAW-Rest/api/validation?api_key=' . $_SESSION['api_key'] . '&username=' . $_SESSION['user']);
+$data = json_decode($response->getBody(), TRUE);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +41,7 @@ $this->load->library('session');
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Dilo Academy <sup>Week 9</sup></div>
+        <div class="sidebar-brand-text mx-3">Balahu <sup>Rest Client</sup></div>
       </a>
 
       <!-- Divider -->
@@ -67,8 +71,11 @@ $this->load->library('session');
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">List of action:</h6>
-            <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a>
-            <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a>
+            <a class="collapse-item" href="<?php echo base_url('User/profile') ?>">Profile</a>
+            <a class="collapse-item" href="<?php echo base_url('User/data') ?>">User Data</a>
+            <!-- <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a> -->
+            <!-- <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a> -->
+
           </div>
         </div>
       </li>
@@ -128,8 +135,8 @@ $this->load->library('session');
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Dilo Assignment</span>
-                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $data['name'] ?></span>
+                <img class="img-profile rounded-circle" src="data:image/png;base64,<?php echo $data['photo'] ?>">
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -155,7 +162,7 @@ $this->load->library('session');
         <footer class="sticky-footer bg-white">
           <div class="container my-auto">
             <div class="copyright text-center my-auto">
-              <span>Copyright &copy; ZakMas 2019</span>
+              <span>Copyright &copy; Balahu 2019</span>
             </div>
           </div>
         </footer>

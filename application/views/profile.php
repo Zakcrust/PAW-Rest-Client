@@ -1,8 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-$this->load->library('session');
-$this->load->model('DataModel');
+
+$client = new \GuzzleHttp\Client();
+$response = $client->request('GET', $_ENV['url'] . '/PAW-Rest/api/validation?api_key=' . $_SESSION['api_key'] . '&username=' . $_SESSION['user']);
+
+$data = json_decode((string)$response->getBody());
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,11 +19,12 @@ $this->load->model('DataModel');
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>User - Submit Score</title>
+    <title>User - Profile</title>
 
     <!-- Custom fonts for this template-->
     <link href="<?php echo base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
     <!-- Custom styles for this template-->
     <link href="<?php echo base_url('assets/') ?>css/sb-admin-2.min.css" rel="stylesheet">
 
@@ -37,11 +43,10 @@ $this->load->model('DataModel');
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Dilo Assignment <sup>Week 9</sup></div>
+                <div class="sidebar-brand-text mx-3">Balahu <sup>Rest Client</sup></div>
             </a>
 
             <!-- Divider -->
-
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
@@ -68,8 +73,8 @@ $this->load->model('DataModel');
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">List of action:</h6>
-                        <a class="collapse-item" href="<?php echo base_url('User/score') ?>">Submit score</a>
-                        <a class="collapse-item" href="<?php echo base_url('User/leaderboard') ?>">Leaderboards</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/profile') ?>">Profile</a>
+                        <a class="collapse-item" href="<?php echo base_url('User/data') ?>">User Data</a>
                     </div>
                 </div>
             </li>
@@ -129,8 +134,8 @@ $this->load->model('DataModel');
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Dilo Assignment</span>
-                                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $data->name ?></span>
+                                <img class="img-profile rounded-circle" src="data:image/png;base64,<?php echo $data->photo ?>">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -147,36 +152,58 @@ $this->load->model('DataModel');
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <form action="<?php echo base_url('User/submitscore') ?>" method="post">
-                        <input type="hidden" name="user_id" value="<?php echo $user->id ?>">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Game</label>
-                            <select name="game_id" class="form-control" id="exampleFormControlSelect1" required>
-                                <?php
-                                $game_data_query = $this->db->get('game');
-                                $game_data['game'] = $game_data_query->result();
-                                foreach ($game_data['game'] as $g) {
-                                    ?>
-                                    <option value="<?php echo $g->id ?>"><?php echo $g->game_name ?></option>
-                                    bruh
-                                <?php } ?>
-                            </select>
+                <div class="container">
+                    <form action="<?php echo base_url('User/updateProfile') ?>" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <input type="hidden" name="current_image" value="<?php echo $data->photo ?>">
+                            <input type="hidden" name="id" value="<?php echo $data->id ?>">
+                            <div class="card-body rounded mx-auto d-block">
+                                <p class="card-text"><img src="data:image/png;base64,<?php echo $data->photo ?>" alt=""></p>
+                                <input type="file" name="fileToUpload">
+                            </div>
+
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Score</label>
-                            <input name="score" type="number" class="form-control" id="exampleInputPassword1" placeholder="Score" required>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6 sl-6 mx auto">
+                                <h4>Username :</h4>
+                            </div>
+                            <div class="col-md-6 sl-6 mx auto">
+                                <input type="text" name="username" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="<?php echo $data->username ?>" disabled>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Level</label>
-                            <input name="level" type="number" class="form-control" id="exampleInputPassword1" placeholder="Level" required>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6 sl-6 mx auto">
+                                <h4>Name :</h4>
+                            </div>
+                            <div class="col-md-6 sl-6 mx auto">
+                                <input type="text" name="name" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="<?php echo $data->name ?>" required>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6 sl-6 mx-auto">
+                                <h4>Password :</h4>
+                            </div>
+                            <div class="col-md-6 sl-6 mx-auto">
+                                <input type="password" name="password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="<?php echo $_SESSION['pass'] ?>" required>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-3 sl-3">
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h4>
+                                <div style="color :red"><?php echo $this->session->flashdata('data_invalid') ?></div>
+                            </h4>
+                        </div>
                     </form>
-                    <div class="d-flex justify-content-center">
-                        <div style="color :green"><?php echo $this->session->flashdata('data_success') ?></div>
-                    </div>
                 </div>
+
                 <!-- /.container-fluid -->
 
                 <!-- End of Main Content -->
@@ -185,7 +212,7 @@ $this->load->model('DataModel');
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; Dilo Assignment 2019</span>
+                            <span>Copyright &copy; Balahu 2019</span>
                         </div>
                     </div>
                 </footer>
